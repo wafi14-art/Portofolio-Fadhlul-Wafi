@@ -1,0 +1,606 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #a855f7, #ec4899);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #9333ea, #db2777);
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.animate-slide-up:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.animate-slide-up:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.animate-slide-up:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   SCROLL ANIMATIONS - PENTING!
+======================================== */
+
+/* Scroll Fade In Animation */
+.scroll-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Slide In Left Animation */
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.slide-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Slide In Right Animation */
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.slide-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Project Cards Animation */
+.project-card-item {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.project-card-item.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Staggered Animation untuk Cards */
+.project-card-item:nth-child(1).visible {
+    transition-delay: 0.1s;
+}
+
+.project-card-item:nth-child(2).visible {
+    transition-delay: 0.2s;
+}
+
+.project-card-item:nth-child(3).visible {
+    transition-delay: 0.3s;
+}
+
+.project-card-item:nth-child(4).visible {
+    transition-delay: 0.1s;
+}
+
+.project-card-item:nth-child(5).visible {
+    transition-delay: 0.2s;
+}
+
+.project-card-item:nth-child(6).visible {
+    transition-delay: 0.3s;
+}
+
+.project-card-item:nth-child(7).visible {
+    transition-delay: 0.1s;
+}
+
+.project-card-item:nth-child(8).visible {
+    transition-delay: 0.2s;
+}
+
+/* Scale Animation untuk Hover */
+.project-card-item:hover {
+    transform: scale(1.05);
+}
+
+/* Certificate Card Animation */
+.certificate-card {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.certificate-card.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* Loading Animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(to right, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Glass Effect */
+.glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Pulse Animation untuk CTA Buttons */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Bounce Animation untuk Icons */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+/* Fade In Up Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Section Reveal Animation */
+.section-reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.section-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+
+    .scroll-fade-in,
+    .slide-in-left,
+    .slide-in-right,
+    .project-card-item {
+        transform: translateY(20px);
+    }
+
+    .scroll-fade-in.visible,
+    .slide-in-left.visible,
+    .slide-in-right.visible {
+        transform: translateY(0);
+    }
+}
+
+/* Prevent Animation Flickering */
+.scroll-fade-in,
+.slide-in-left,
+.slide-in-right,
+.project-card-item,
+.certificate-card {
+    will-change: opacity, transform;
+}
+
+/* ========================================
+   MODERN VISUAL ENHANCEMENTS
+======================================== */
+
+/* Enhanced Gradient Backgrounds */
+.modern-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modern-gradient-alt {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Modern Glassmorphism Effect */
+.glass-modern {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced Button Effects */
+.btn-modern {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(45deg, #a855f7, #ec4899);
+    transition: all 0.3s ease;
+}
+
+.btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-modern:hover::before {
+    left: 100%;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+}
+
+/* Modern Card Hover Effects */
+.card-modern {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-modern:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Floating Animation for Icons */
+@keyframes float-gentle {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.float-icon {
+    animation: float-gentle 3s ease-in-out infinite;
+}
+
+/* Modern Text Effects */
+.text-modern {
+    background: linear-gradient(45deg, #a855f7, #ec4899, #667eea);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Enhanced Shadow Effects */
+.shadow-modern {
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.shadow-modern-lg {
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Modern Border Effects */
+.border-modern {
+    border: 1px solid;
+    border-image: linear-gradient(45deg, #a855f7, #ec4899) 1;
+}
+
+/* Pulse Effect for Interactive Elements */
+@keyframes pulse-modern {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px rgba(168, 85, 247, 0);
+    }
+}
+
+.pulse-modern {
+    animation: pulse-modern 2s infinite;
+}
+
+/* Modern Loading Animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced Focus States */
+.focus-modern:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.3);
+    border-color: #a855f7;
+}
+
+/* Modern Tooltip */
+.tooltip-modern {
+    position: relative;
+}
+
+.tooltip-modern::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip-modern:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Modern Scroll Indicator */
+.scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #a855f7, #ec4899);
+    transform-origin: left;
+    z-index: 1000;
+    transition: transform 0.1s ease-out;
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 768px) {
+    .glass-modern {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .card-modern:hover {
+        transform: translateY(-4px) scale(1.01);
+    }
+
+    .text-modern {
+        background-size: 150% 150%;
+    }
+}
+
+/* Dark Mode Enhancements */
+.dark .glass-modern {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .shadow-modern {
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        0 2px 4px -1px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* Performance Optimizations */
+.glass-modern,
+.card-modern,
+.btn-modern {
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Portfolio Custom Styles */
+.brush-frame {
+    position: relative;
+    display: inline-block;
+}
+
+.brush-frame::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    background: linear-gradient(135deg, #4A90E2, #FFD700);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    z-index: -1;
+    animation: morphing 8s ease-in-out infinite;
+}
+
+@keyframes morphing {
+
+    0%,
+    100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+
+    25% {
+        border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+    }
+
+    50% {
+        border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+    }
+
+    75% {
+        border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+    }
+}
+
+/* Card Glass Effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Yellow Progress Bar */
+.progress-bar-yellow {
+    background: linear-gradient(90deg, #FFD700 0%, #FFC107 100%);
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Service Card Hover */
+.service-card {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
