@@ -19,7 +19,7 @@
         "postcss": "^8.4.32",
         "tailwindcss": "^3.3.6"
     },
-    "homepage": "https://github.com/wafi14-art/Portofolio-Fadhlul-Wafi",
+    "homepage": "https://wafi14-art.github.io/Portofolio-Fadhlul-Wafi",
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",

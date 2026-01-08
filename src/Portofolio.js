@@ -67,7 +67,7 @@ const Portfolio = () => {
             description: "Android-based POS system with transaction management",
             longDescription: "A comprehensive point-of-sale (POS) application built with Kotlin and Android Studio. Features include product management, transaction processing, receipt generation, and sales reporting. Designed for small to medium businesses to streamline their cashier operations.",
             tech: ["Kotlin", "Android Studio", "SQLite", "Material Design"],
-            image: "/kasirapp-logo.png",
+            image: "/public/kasirapp-logo.png",
             imageType: "custom"
         },
         {
@@ -112,27 +112,26 @@ const Portfolio = () => {
         }
     ];
 
-    // Certificates 
     const certificates = [
-        { id: 1, title: 'IBM Python for Data Science', image: '/certificates/ibm_python_for_data_science.jpg' },
-        { id: 2, title: 'Survey Kesadaran Keamanan Siber', image: '/certificates/survey_keamanan_siber.jpg' },
-        { id: 3, title: 'Pemrograman Berorientasi Objek', image: '/certificates/pbo.jpg' },
-        { id: 4, title: 'Pengantar Sistem Digital', image: '/certificates/pengantar_sistem_digital.jpg' },
-        { id: 5, title: 'Sistem Informasi', image: '/certificates/sistem_informasi.jpg' },
-        { id: 6, title: 'Jaringan Komputer', image: '/certificates/jaringan_komputer.jpg' },
-        { id: 7, title: 'Exam Cisco Essentials', image: '/certificates/cisco_essentials.jpg' },
-        { id: 8, title: 'Analisa Numerik', image: '/certificates/sertifikat_tambahan.jpg' }
+        { id: 1, title: 'IBM Python for Data Science', image: '/certificates/ibm_python_for_data_science.png' },
+        { id: 2, title: 'Survey Kesadaran Keamanan Siber', image: '/certificates/survey_keamanan_siber.png' },
+        { id: 3, title: 'Pemrograman Berorientasi Objek', image: '/certificates/pbo.png' },
+        { id: 4, title: 'Pengantar Sistem Digital', image: '/certificates/pengantar_sistem_digital.png' },
+        { id: 5, title: 'Sistem Informasi', image: '/certificates/sistem_informasi.png' },
+        { id: 6, title: 'Jaringan Komputer', image: '/certificates/jaringan_komputer.png' },
+        { id: 7, title: 'Exam Cisco Essentials', image: '/certificates/cisco_essentials.png' },
+        { id: 8, title: 'Analisa Numerik', image: '/certificates/sertifikat_tambahan.png' }
     ];
 
     const skills = [
-        { name: "JavaScript", icon: "/icons/javascript.png" },
-        { name: "TypeScript", icon: "/icons/typescript.png" },
-        { name: "Python", icon: "/icons/python.png" },
-        { name: "PHP", icon: "/icons/php.png" },
-        { name: "Kotlin", icon: "/icons/kotlin.png" },
-        { name: "React", icon: "/icons/react.png" },
-        { name: "Node.js", icon: "/icons/nodejs.png" },
-        { name: "MySQL", icon: "/icons/mysql.png" },
+        { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+        { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+        { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+        { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
+        { name: "Kotlin", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" },
+        { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+        { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+        { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
     ];
 
 
@@ -151,7 +150,7 @@ const Portfolio = () => {
         {
             icon: <Palette className="w-8 h-8" />,
             title: "UI/UX Design",
-            description: "Beautiful, intuitive interfaces that users love to interact with"
+            description: "Beautiful, intuitive interfaces that users love to interact with Smile"
         }
     ];
 
@@ -542,7 +541,7 @@ const Portfolio = () => {
                         <div className="mb-6 sm:mb-8 inline-block animate-fade-in">
                             <div className="brush-frame animate-float">
                                 <img
-                                    src="/FadhlulWafi Formal.jpeg"
+                                    src="/FadhlulWafi Profile.jpg"
                                     alt="Fadhlul Wafi"
                                     className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300"
                                 />
@@ -621,21 +620,27 @@ const Portfolio = () => {
 
                             <div className={`backdrop-blur-lg bg-white/10 dark:bg-white/5 p-6 sm:p-8 rounded-3xl border border-white/20 slide-in-right ${aboutVisible ? 'visible' : ''}`}>
                                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Skills</h3>
-                                <div className="flex flex-wrap gap-4 mt-6">
-                                    {skills.map((skill) => (
+                                <div className="grid grid-cols-4 sm:grid-cols-4 gap-4">
+                                    {skills.map((skill, index) => (
                                         <div
-                                            key={skill.name}
-                                            className="px-6 py-3 bg-black-400 text-gray-900 rounded-full flex items-center justify-center shadow-modern"
+                                            key={index}
+                                            className="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 group"
                                         >
                                             <img
                                                 src={skill.icon}
                                                 alt={skill.name}
-                                                className="w-8 h-8"
+                                                className="w-12 h-12 mb-2 group-hover:scale-110 transition-transform"
+                                                onError={(e) => {
+                                                    console.error(`Failed to load: ${skill.icon}`);
+                                                    e.target.style.display = 'none';
+                                                }}
                                             />
+                                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center mt-1">
+                                                {skill.name}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
-
                             </div>
                         </div>
 
@@ -853,7 +858,16 @@ const Portfolio = () => {
                                     className={`group bg-white/5 dark:bg-white/5 p-2 sm:p-4 rounded-2xl border border-white/10 hover:scale-105 transition-all flex flex-col items-center project-card-item ${certificatesVisible ? 'visible' : ''}`}
                                 >
                                     <div className="w-full h-20 sm:h-24 md:h-36 bg-white/10 rounded overflow-hidden flex items-center justify-center">
-                                        <img src={cert.image} alt={cert.title} className="object-cover w-full h-full" />
+                                        <img
+                                            src={cert.image}
+                                            alt={cert.title}
+                                            className="object-cover w-full h-full"
+                                            onError={(e) => {
+                                                console.error(`Failed to load certificate: ${cert.image}`);
+                                                e.target.style.display = 'none';
+                                                e.target.parentElement.innerHTML = `<div class="flex items-center justify-center w-full h-full bg-gray-700 text-white text-xs p-2 text-center">${cert.title}</div>`;
+                                            }}
+                                        />
                                     </div>
                                     <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-100 text-center line-clamp-2">{cert.title}</div>
                                 </button>
