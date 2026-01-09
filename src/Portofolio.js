@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Github, Linkedin, Download, ChevronRight, Code, Palette, Smartphone, ChevronLeft, ExternalLink, Calendar, Briefcase } from 'lucide-react';
 import { send } from '@emailjs/browser';
 
+
 // Custom hook untuk scroll animations
 const useInViewAnimation = (ref, options = {}) => {
     const [isVisible, setIsVisible] = useState(false);
@@ -67,7 +68,7 @@ const Portfolio = () => {
             description: "Android-based POS system with transaction management",
             longDescription: "A comprehensive point-of-sale (POS) application built with Kotlin and Android Studio. Features include product management, transaction processing, receipt generation, and sales reporting. Designed for small to medium businesses to streamline their cashier operations.",
             tech: ["Kotlin", "Android Studio", "SQLite", "Material Design"],
-            image: "/public/kasirapp-logo.png",
+            image: `${process.env.PUBLIC_URL}/kasirapp-logo.png`,
             imageType: "custom"
         },
         {
@@ -113,15 +114,15 @@ const Portfolio = () => {
     ];
 
     const certificates = [
-        { id: 1, title: 'IBM Python for Data Science', image: '/certificates/ibm_python_for_data_science.png' },
-        { id: 2, title: 'Survey Kesadaran Keamanan Siber', image: '/certificates/survey_keamanan_siber.png' },
-        { id: 3, title: 'Pemrograman Berorientasi Objek', image: '/certificates/pbo.png' },
-        { id: 4, title: 'Pengantar Sistem Digital', image: '/certificates/pengantar_sistem_digital.png' },
-        { id: 5, title: 'Sistem Informasi', image: '/certificates/sistem_informasi.png' },
-        { id: 6, title: 'Jaringan Komputer', image: '/certificates/jaringan_komputer.png' },
-        { id: 7, title: 'Exam Cisco Essentials', image: '/certificates/cisco_essentials.png' },
-        { id: 8, title: 'Analisa Numerik', image: '/certificates/sertifikat_tambahan.png' }
-    ];
+  { id: 1, title: 'IBM Python for Data Science', image: `${process.env.PUBLIC_URL}/certificates/ibm_python_for_data_science.png` },
+  { id: 2, title: 'Survey Kesadaran Keamanan Siber', image: `${process.env.PUBLIC_URL}/certificates/survey_keamanan_siber.png` },
+  { id: 3, title: 'Pemrograman Berorientasi Objek', image: `${process.env.PUBLIC_URL}/certificates/pbo.png` },
+  { id: 4, title: 'Pengantar Sistem Digital', image: `${process.env.PUBLIC_URL}/certificates/pengantar_sistem_digital.png` },
+  { id: 5, title: 'Sistem Informasi', image: `${process.env.PUBLIC_URL}/certificates/sistem_informasi.png` },
+  { id: 6, title: 'Jaringan Komputer', image: `${process.env.PUBLIC_URL}/certificates/jaringan_komputer.png` },
+  { id: 7, title: 'Exam Cisco Essentials', image: `${process.env.PUBLIC_URL}/certificates/cisco_essentials.png` },
+  { id: 8, title: 'Analisa Numerik', image: `${process.env.PUBLIC_URL}/certificates/sertifikat_tambahan.png` },
+];
 
     const skills = [
         { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
@@ -541,11 +542,12 @@ const Portfolio = () => {
                         <div className="mb-6 sm:mb-8 inline-block animate-fade-in">
                             <div className="brush-frame animate-float">
                                 <img
-                                    src="/FadhlulWafi Profile.jpg"
+                                    src={`${process.env.PUBLIC_URL}/profile.jpg`}
                                     alt="Fadhlul Wafi"
                                     className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300"
                                 />
-                            </div>
+
+                            </div>  
                         </div>
                         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 animate-slide-up leading-tight">
                             Fadhlul Wafi
