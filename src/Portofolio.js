@@ -41,6 +41,7 @@ const Portfolio = () => {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
+    const [flippedSkills, setFlippedSkills] = useState(new Set());
     // Contact form state
     const [contactName, setContactName] = useState('');
     const [contactEmail, setContactEmail] = useState('');
@@ -125,14 +126,14 @@ const Portfolio = () => {
 ];
 
     const skills = [
-        { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
-        { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-        { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-        { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
-        { name: "Kotlin", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" },
-        { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-        { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-        { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+        { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", level: 85, category: "Frontend" },
+        { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", level: 75, category: "Frontend" },
+        { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", level: 80, category: "Backend" },
+        { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg", level: 70, category: "Backend" },
+        { name: "Kotlin", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg", level: 65, category: "Mobile" },
+        { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", level: 90, category: "Frontend" },
+        { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", level: 75, category: "Backend" },
+        { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", level: 80, category: "Database" },
     ];
 
 
@@ -621,27 +622,86 @@ const Portfolio = () => {
 
 
                             <div className={`backdrop-blur-lg bg-white/10 dark:bg-white/5 p-6 sm:p-8 rounded-3xl border border-white/20 slide-in-right ${aboutVisible ? 'visible' : ''}`}>
-                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Skills</h3>
-                                <div className="grid grid-cols-4 sm:grid-cols-4 gap-4">
-                                    {skills.map((skill, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 group"
-                                        >
-                                            <img
-                                                src={skill.icon}
-                                                alt={skill.name}
-                                                className="w-12 h-12 mb-2 group-hover:scale-110 transition-transform"
-                                                onError={(e) => {
-                                                    console.error(`Failed to load: ${skill.icon}`);
-                                                    e.target.style.display = 'none';
-                                                }}
-                                            />
-                                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center mt-1">
-                                                {skill.name}
-                                            </span>
+                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Skills & Expertise</h3>
+
+                                {/* Skills Categories */}
+                                {['Frontend', 'Backend', 'Mobile', 'Database'].map((category) => {
+                                    const categorySkills = skills.filter(skill => skill.category === category);
+                                    if (categorySkills.length === 0) return null;
+
+                                    return (
+                                        <div key={category} className="mb-6 sm:mb-8">
+                                            <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                                                <span className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-3"></span>
+                                                {category}
+                                            </h4>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                                {categorySkills.map((skill, index) => {
+                                                    const skillId = `${category}-${skill.name}`;
+                                                    const isFlipped = flippedSkills.has(skillId);
+
+                                                    return (
+                                                        <div key={index} className="flex flex-col items-center space-y-2">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setFlippedSkills(prev => {
+                                                                        const newSet = new Set(prev);
+                                                                        if (newSet.has(skillId)) {
+                                                                            newSet.delete(skillId);
+                                                                        } else {
+                                                                            newSet.add(skillId);
+                                                                        }
+                                                                        return newSet;
+                                                                    });
+                                                                }}
+                                                                className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center transition-all duration-500 hover:scale-110 hover:shadow-lg hover:shadow-purple-500/30 ${isFlipped ? 'rotate-y-180' : ''}`}
+                                                                style={{
+                                                                    transformStyle: 'preserve-3d',
+                                                                    transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                                                                }}
+                                                            >
+                                                                <img
+                                                                    src={skill.icon}
+                                                                    alt={skill.name}
+                                                                    className="w-6 h-6 sm:w-8 sm:h-8 filter brightness-0 invert"
+                                                                    onError={(e) => {
+                                                                        console.error(`Failed to load: ${skill.icon}`);
+                                                                        e.target.style.display = 'none';
+                                                                    }}
+                                                                />
+                                                            </button>
+                                                            <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
+                                                                {skill.name}
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
-                                    ))}
+                                    );
+                                })}
+
+                                {/* Skill Level Legend */}
+                                <div className="mt-6 sm:mt-8 p-4 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10">
+                                    <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">Proficiency Levels</h5>
+                                    <div className="grid grid-cols-2 gap-3 text-xs">
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full"></div>
+                                            <span className="text-gray-600 dark:text-gray-400">80-100%: Expert</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
+                                            <span className="text-gray-600 dark:text-gray-400">60-79%: Advanced</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
+                                            <span className="text-gray-600 dark:text-gray-400">40-59%: Intermediate</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <div className="w-3 h-3 bg-gradient-to-r from-red-400 to-red-600 rounded-full"></div>
+                                            <span className="text-gray-600 dark:text-gray-400">0-39%: Beginner</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
