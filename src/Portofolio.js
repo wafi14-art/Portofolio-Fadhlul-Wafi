@@ -3,14 +3,10 @@ import {
     Award,
     Briefcase,
     Calendar,
-    CheckCircle2,
     ChevronRight,
-    Clock3,
     Code,
     Download,
     ExternalLink,
-    Figma,
-    FileText,
     Github,
     Linkedin,
     Mail,
@@ -158,13 +154,6 @@ const certificates = [
 
 const profileImage = `${process.env.PUBLIC_URL}/foto-profile-baru-web.png`;
 const cvFile = `${process.env.PUBLIC_URL}/The New CV of Fadhlul Wafi.pdf`;
-const cvPreviewItems = [
-    { label: 'Role utama', value: 'Software Developer & UI-focused builder' },
-    { label: 'Domisili', value: 'Bekasi, Indonesia' },
-    { label: 'Fokus kerja', value: 'Web, Android, dan UI/UX cleanup' },
-    { label: 'Respon awal', value: '1 x 24 jam pada hari kerja' },
-];
-
 const contactLinks = [
     {
         label: 'LinkedIn',
