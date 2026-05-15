@@ -1,1015 +1,863 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Github, Linkedin, Download, ChevronRight, Code, Palette, Smartphone, ChevronLeft, ExternalLink, Calendar, Briefcase } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import {
+    Award,
+    Briefcase,
+    Calendar,
+    CheckCircle2,
+    ChevronRight,
+    Clock3,
+    Code,
+    Download,
+    ExternalLink,
+    Figma,
+    FileText,
+    Github,
+    Linkedin,
+    Mail,
+    MapPin,
+    Menu,
+    MessageCircle,
+    Palette,
+    Smartphone,
+    X,
+} from 'lucide-react';
 import { send } from '@emailjs/browser';
 
+const navItems = [
+    { label: 'Beranda', id: 'home' },
+    { label: 'Tentang', id: 'about' },
+    { label: 'Proses', id: 'process' },
+    { label: 'Proyek', id: 'projects' },
+    { label: 'Kontak', id: 'contact' },
+];
 
-// Custom hook untuk scroll animations
-const useInViewAnimation = (ref, options = {}) => {
-    const [isVisible, setIsVisible] = useState(false);
+const stats = [
+    { value: '02', label: 'Proyek unggulan' },
+    { value: '08', label: 'Sertifikat' },
+    { value: '04', label: 'Fokus utama' },
+];
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                setIsVisible(true);
-                observer.unobserve(entry.target);
-            }
-        }, {
-            threshold: 0.1,
-            ...options
-        });
+const processSteps = [
+    {
+        step: '01',
+        title: 'Research',
+        description: 'Merapikan kebutuhan, alur user, dan prioritas fitur sebelum desain dimulai.',
+    },
+    {
+        step: '02',
+        title: 'Design',
+        description: 'Menyusun interface yang bersih, mudah dipahami, dan terasa profesional.',
+    },
+    {
+        step: '03',
+        title: 'Build',
+        description: 'Mengubah desain menjadi produk React atau Android yang rapi dan stabil.',
+    },
+    {
+        step: '04',
+        title: 'Launch',
+        description: 'Finishing, testing, dan delivery supaya hasil siap dipakai atau dipresentasikan.',
+    },
+];
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+const services = [
+    {
+        icon: Code,
+        title: 'Pengembangan Website',
+        description: 'Landing page dan web app yang cepat, rapi, dan enak dipakai di desktop maupun mobile.',
+    },
+    {
+        icon: Smartphone,
+        title: 'Aplikasi Mobile',
+        description: 'Pengembangan aplikasi Android berbasis Kotlin dengan alur transaksi yang jelas.',
+    },
+    {
+        icon: Palette,
+        title: 'Perapihan UI/UX',
+        description: 'Perombakan tampilan agar terasa lebih clean, terstruktur, dan tidak seperti template.',
+    },
+];
 
-        return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
-        };
-    }, [ref, options]);
+const experience = [
+    {
+        period: 'Proyek Kampus',
+        title: 'Sistem Penjadwalan Praktikum',
+        detail: 'Sistem penjadwalan praktikum dengan PHP dan MySQL untuk pengelolaan jadwal lab.',
+    },
+    {
+        period: 'Analisis Data',
+        title: 'Prediksi Tingkat Pengangguran',
+        detail: 'Analisis tingkat pengangguran berdasarkan jenjang pendidikan dengan Logistic Regression.',
+    },
+    {
+        period: 'Pengembangan Android',
+        title: 'Aplikasi Kasir',
+        detail: 'Aplikasi kasir Android berbasis Kotlin untuk transaksi, data produk, dan laporan sederhana.',
+    },
+];
 
-    return isVisible;
-};
+const toolLogos = [
+    { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+    { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+    { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
+    { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
+    { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+    { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+    { name: 'PHP', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg' },
+    { name: 'Supabase', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg' },
+    { name: 'Kotlin', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg' },
+    { name: 'Java', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+    { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
+    { name: 'SQLite', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg' },
+];
+
+const projects = [
+    {
+        id: 1,
+        title: 'Sipadu',
+        category: 'Website',
+        description: 'Sistem informasi pelayanan publik terintegrasi untuk Kecamatan Tambun Utara.',
+        longDescription:
+            'Sipadu membantu warga mengakses layanan, informasi, dan pengaduan dalam satu platform yang lebih terstruktur dan transparan.',
+        tech: ['React', 'Tailwind CSS', 'Vite', 'Supabase'],
+        image: `${process.env.PUBLIC_URL}/sipadu-logo.png`,
+        liveUrl: 'https://sipadu-tambun-utara.vercel.app/',
+        repoUrl: '',
+        figmaUrl: '',
+        frameClass: 'project-logo-frame-wide',
+        imageClass: 'project-logo-image-wide',
+    },
+    {
+        id: 2,
+        title: 'KasirApp - EZ-PAY',
+        category: 'Aplikasi Mobile',
+        description: 'Sistem kasir berbasis Android untuk transaksi dan pengelolaan produk.',
+        longDescription:
+            'Aplikasi kasir mobile untuk membantu proses transaksi, pengelolaan produk, dan rekap penjualan dengan alur yang mudah dipahami.',
+        tech: ['Kotlin', 'Android Studio', 'SQLite', 'Material Design'],
+        image: `${process.env.PUBLIC_URL}/kasirapp-logo.png`,
+        repoUrl: '',
+        figmaUrl: '',
+        frameClass: 'project-logo-frame-square',
+        imageClass: 'project-logo-image-square',
+    },
+];
+
+const projectFilters = ['Semua', 'Website', 'Aplikasi Mobile'];
+
+const certificates = [
+    { id: 1, title: 'IBM Python for Data Science', image: `${process.env.PUBLIC_URL}/certificates/ibm_python_for_data_science.png` },
+    { id: 2, title: 'Survey Kesadaran Keamanan Siber', image: `${process.env.PUBLIC_URL}/certificates/survey_keamanan_siber.png` },
+    { id: 3, title: 'Pemrograman Berorientasi Objek', image: `${process.env.PUBLIC_URL}/certificates/pbo.png` },
+    { id: 4, title: 'Pengantar Sistem Digital', image: `${process.env.PUBLIC_URL}/certificates/pengantar_sistem_digital.png` },
+    { id: 5, title: 'Sistem Informasi', image: `${process.env.PUBLIC_URL}/certificates/sistem_informasi.png` },
+    { id: 6, title: 'Jaringan Komputer', image: `${process.env.PUBLIC_URL}/certificates/jaringan_komputer.png` },
+    { id: 7, title: 'Exam Cisco Essentials', image: `${process.env.PUBLIC_URL}/certificates/cisco_essentials.png` },
+    { id: 8, title: 'Analisa Numerik', image: `${process.env.PUBLIC_URL}/certificates/sertifikat_tambahan.png` },
+];
+
+const profileImage = `${process.env.PUBLIC_URL}/foto-profile-baru-web.png`;
+const cvFile = `${process.env.PUBLIC_URL}/The New CV of Fadhlul Wafi.pdf`;
+const cvPreviewItems = [
+    { label: 'Role utama', value: 'Software Developer & UI-focused builder' },
+    { label: 'Domisili', value: 'Bekasi, Indonesia' },
+    { label: 'Fokus kerja', value: 'Web, Android, dan UI/UX cleanup' },
+    { label: 'Respon awal', value: '1 x 24 jam pada hari kerja' },
+];
+
+const contactLinks = [
+    {
+        label: 'LinkedIn',
+        href: 'https://www.linkedin.com/in/fadhlul-wafi-b76467319',
+        icon: Linkedin,
+        bg: 'bg-[#e8f0fe]',
+        textColor: 'text-[#174ea6]',
+    },
+    {
+        label: 'GitHub',
+        href: 'https://github.com/wafi14-art',
+        icon: Github,
+        bg: 'bg-[#f5f5f5]',
+        textColor: 'text-[#111827]',
+    },
+    {
+        label: 'WhatsApp',
+        href: 'https://wa.me/62895412231715',
+        icon: MessageCircle,
+        bg: 'bg-[#d1f7d6]',
+        textColor: 'text-[#107f3e]',
+    },
+    {
+        label: 'Email',
+        href: 'mailto:fadhlulwafi1405@gmail.com?subject=Halo%20Fadhlul%20Wafi&body=Halo%20Fadhlul%2C%0D%0A%0D%0ASaya%20ingin%20menghubungi%20Anda%20terkait%20project%20atau%20kolaborasi.',
+        icon: Mail,
+        bg: 'bg-[#fce8e6]',
+        textColor: 'text-[#a21c17]',
+    },
+];
 
 const Portfolio = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [activeFilter, setActiveFilter] = useState('All');
-    const [selectedProject, setSelectedProject] = useState(null);
+    const [activeFilter, setActiveFilter] = useState('Semua');
     const [selectedCertificate, setSelectedCertificate] = useState(null);
-    const [isZoomed, setIsZoomed] = useState(false);
-    const [currentTestimonial, setCurrentTestimonial] = useState(0);
-    const [isDarkMode, setIsDarkMode] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
-    const [flippedSkills, setFlippedSkills] = useState(new Set());
-    // Contact form state
     const [contactName, setContactName] = useState('');
     const [contactEmail, setContactEmail] = useState('');
     const [contactSubject, setContactSubject] = useState('');
     const [contactMessage, setContactMessage] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const [sendSuccess, setSendSuccess] = useState(false);
+    const [sendError, setSendError] = useState('');
 
-    useEffect(() => {
-        setTimeout(() => setIsLoading(false), 1500);
-    }, []);
-    const projects = [
-        {
-            id: 1,
-            title: "E-Commerce Platform",
-            category: "Web Development",
-            description: "Full-stack e-commerce solution with payment integration",
-            longDescription: "A comprehensive e-commerce platform built with React and Node.js, featuring real-time inventory management, secure payment processing, and an intuitive admin dashboard.",
-            tech: ["React", "Node.js", "MongoDB", "Stripe"],
-            image: "bg-gradient-to-br from-purple-500 to-pink-500",
-            imageType: "gradient"
-        },
-        {
-            id: 2,
-            title: "KasirApp - EZ-PAY",
-            category: "Mobile App",
-            description: "Android-based POS system with transaction management",
-            longDescription: "A comprehensive point-of-sale (POS) application built with Kotlin and Android Studio. Features include product management, transaction processing, receipt generation, and sales reporting. Designed for small to medium businesses to streamline their cashier operations.",
-            tech: ["Kotlin", "Android Studio", "SQLite", "Material Design"],
-            image: `${process.env.PUBLIC_URL}/kasirapp-logo.png`,
-            imageType: "custom"
-        },
-        {
-            id: 3,
-            title: "Brand Identity Design",
-            category: "Design",
-            description: "Complete brand identity for tech startup",
-            longDescription: "Comprehensive brand identity package including logo design, color palette, typography, and brand guidelines for a innovative tech startup.",
-            tech: ["Figma", "Illustrator", "Photoshop"],
-            image: "bg-gradient-to-br from-orange-500 to-red-500",
-            imageType: "gradient"
-        },
-        {
-            id: 4,
-            title: "AI Dashboard",
-            category: "Web Development",
-            description: "Analytics dashboard with AI-powered insights",
-            longDescription: "An intelligent dashboard that leverages machine learning to provide predictive analytics and actionable insights for business decision-making.",
-            tech: ["Vue.js", "Python", "TensorFlow", "D3.js"],
-            image: "bg-gradient-to-br from-green-500 to-teal-500",
-            imageType: "gradient"
-        },
-        {
-            id: 5,
-            title: "Fitness Tracking App",
-            category: "Mobile App",
-            description: "Health and fitness tracking with social features",
-            longDescription: "A comprehensive fitness application that tracks workouts, nutrition, and connects users with a community of fitness enthusiasts.",
-            tech: ["Flutter", "Firebase", "Google Fit API"],
-            image: "bg-gradient-to-br from-yellow-500 to-orange-500",
-            imageType: "gradient"
-        },
-        {
-            id: 6,
-            title: "Portfolio Website Template",
-            category: "Design",
-            description: "Modern, responsive portfolio template",
-            longDescription: "A beautifully crafted portfolio template with dark mode, smooth animations, and customizable components for creative professionals.",
-            tech: ["HTML", "CSS", "JavaScript", "GSAP"],
-            image: "bg-gradient-to-br from-indigo-500 to-purple-500",
-            imageType: "gradient"
+    const filteredProjects = useMemo(() => {
+        if (activeFilter === 'Semua') {
+            return projects;
         }
-    ];
 
-    const certificates = [
-  { id: 1, title: 'IBM Python for Data Science', image: `${process.env.PUBLIC_URL}/certificates/ibm_python_for_data_science.png` },
-  { id: 2, title: 'Survey Kesadaran Keamanan Siber', image: `${process.env.PUBLIC_URL}/certificates/survey_keamanan_siber.png` },
-  { id: 3, title: 'Pemrograman Berorientasi Objek', image: `${process.env.PUBLIC_URL}/certificates/pbo.png` },
-  { id: 4, title: 'Pengantar Sistem Digital', image: `${process.env.PUBLIC_URL}/certificates/pengantar_sistem_digital.png` },
-  { id: 5, title: 'Sistem Informasi', image: `${process.env.PUBLIC_URL}/certificates/sistem_informasi.png` },
-  { id: 6, title: 'Jaringan Komputer', image: `${process.env.PUBLIC_URL}/certificates/jaringan_komputer.png` },
-  { id: 7, title: 'Exam Cisco Essentials', image: `${process.env.PUBLIC_URL}/certificates/cisco_essentials.png` },
-  { id: 8, title: 'Analisa Numerik', image: `${process.env.PUBLIC_URL}/certificates/sertifikat_tambahan.png` },
-];
-
-    const skills = [
-        { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", level: 85, category: "Frontend" },
-        { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", level: 75, category: "Frontend" },
-        { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", level: 80, category: "Backend" },
-        { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg", level: 70, category: "Backend" },
-        { name: "Kotlin", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg", level: 65, category: "Mobile" },
-        { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", level: 90, category: "Frontend" },
-        { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", level: 75, category: "Backend" },
-        { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", level: 80, category: "Database" },
-    ];
-
-
-
-    const services = [
-        {
-            icon: <Code className="w-8 h-8" />,
-            title: "Web Development",
-            description: "Custom web applications with modern technologies and best practices"
-        },
-        {
-            icon: <Smartphone className="w-8 h-8" />,
-            title: "Mobile Development",
-            description: "Native and cross-platform mobile apps for iOS and Android"
-        },
-        {
-            icon: <Palette className="w-8 h-8" />,
-            title: "UI/UX Design",
-            description: "Beautiful, intuitive interfaces that users love to interact with Smile"
-        }
-    ];
-
-    const testimonials = [
-        {
-            name: "Sarah Johnson",
-            role: "CEO, TechCorp",
-            content: "Exceptional work! The website exceeded our expectations in every way. Highly professional and creative.",
-            avatar: "bg-gradient-to-br from-pink-400 to-purple-400"
-        },
-        {
-            name: "Michael Chen",
-            role: "Product Manager, StartupXYZ",
-            content: "Outstanding developer who delivers on time and goes above and beyond. Our app is a huge success!",
-            avatar: "bg-gradient-to-br from-blue-400 to-cyan-400"
-        },
-        {
-            name: "Muhammad Rafi",
-            role: "Marketing Director, BrandCo",
-            content: "Creative genius! The design work was stunning and perfectly captured our brand identity.",
-            avatar: "bg-gradient-to-br from-green-400 to-teal-400"
-        }
-    ];
-
-    const experience = [
-        {
-            year: "Project Kampus",
-            title: "Penjadwalan Praktikum",
-            company: "Universitas",
-            description: "Sistem penjadwalan praktikum menggunakan PHP & MySQL dengan database terpadu"
-        },
-        {
-            year: "Project Kampus",
-            title: "Prediksi Pengangguran",
-            company: "Data Science",
-            description: "Olah data prediksi pengangguran tingkat pendidikan di Indonesia menggunakan Logistic Regression dengan Python"
-        },
-        {
-            year: "Project Kampus",
-            title: "Aplikasi Kasir Android",
-            company: "Android Development",
-            description: "Membuat aplikasi mobile menggunakan Kotlin pada Android Studio"
-        }
-    ];
-
-    const filteredProjects = activeFilter === 'All'
-        ? projects
-        : projects.filter(p => p.category === activeFilter);
-
-    const nextTestimonial = () => {
-        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    };
-
-    const prevTestimonial = () => {
-        setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    };
+        return projects.filter((project) => project.category === activeFilter);
+    }, [activeFilter]);
 
     const scrollToSection = (id) => {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setIsMenuOpen(false);
     };
 
-    const [isSending, setIsSending] = useState(false);
-    const [sendSuccess, setSendSuccess] = useState(false);
-    const [sendError, setSendError] = useState(null);
-
-    // Refs untuk scroll animations
-    const aboutRef = useRef(null);
-    const projectsRef = useRef(null);
-    const servicesRef = useRef(null);
-    const certificatesRef = useRef(null);
-    const contactRef = useRef(null);
-    const projectCardsRef = useRef([]);
-    const serviceCardsRef = useRef([]);
-
-    // Intersection observer untuk setiap section
-    const aboutVisible = useInViewAnimation(aboutRef);
-    const projectsVisible = useInViewAnimation(projectsRef);
-    const servicesVisible = useInViewAnimation(servicesRef);
-    const certificatesVisible = useInViewAnimation(certificatesRef);
-    const contactVisible = useInViewAnimation(contactRef);
-
-    // Track project cards visibility
-    const [visibleProjects, setVisibleProjects] = useState(new Set());
-    const [visibleServices, setVisibleServices] = useState(new Set());
-
-    // Intersection Observer untuk Project Cards
-    useEffect(() => {
-        const observerOptions = {
-            threshold: 0.15,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const projectObservers = [];
-
-        projectCardsRef.current.forEach((ref, index) => {
-            if (!ref) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Add to visible set
-                        setVisibleProjects(prev => {
-                            const newSet = new Set(prev);
-                            newSet.add(index);
-                            return newSet;
-                        });
-                        // Stop observing once visible
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            observer.observe(ref);
-            projectObservers.push(observer);
-        });
-
-        // Cleanup function
-        return () => {
-            projectObservers.forEach(observer => observer.disconnect());
-        };
-    }, [filteredProjects]); // Re-run when filtered projects change
-    // Intersection Observer untuk Certificate Cards
-    useEffect(() => {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const certificateObservers = [];
-
-        // Wait a bit for refs to be populated
-        const timer = setTimeout(() => {
-            // Get all certificate buttons
-            const certificateElements = document.querySelectorAll('#certificates .project-card-item');
-
-            certificateElements.forEach((element, index) => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            // Add visible class with staggered delay
-                            setTimeout(() => {
-                                entry.target.classList.add('visible');
-                            }, index * 100); // 100ms delay per card
-
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, observerOptions);
-
-                observer.observe(element);
-                certificateObservers.push(observer);
-            });
-        }, 100);
-
-        return () => {
-            clearTimeout(timer);
-            certificateObservers.forEach(observer => observer.disconnect());
-        };
-    }, [certificates, certificatesVisible]); // Re-run when certificates or section visibility changes
-    // Intersection Observer untuk Service Cards
-    useEffect(() => {
-        const observerOptions = {
-            threshold: 0.15,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const serviceObservers = [];
-
-        serviceCardsRef.current.forEach((ref, index) => {
-            if (!ref) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Add to visible set
-                        setVisibleServices(prev => {
-                            const newSet = new Set(prev);
-                            newSet.add(index);
-                            return newSet;
-                        });
-                        // Add visible class manually
-                        entry.target.classList.add('visible');
-                        // Stop observing once visible
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            observer.observe(ref);
-            serviceObservers.push(observer);
-        });
-
-        // Cleanup function
-        return () => {
-            serviceObservers.forEach(observer => observer.disconnect());
-        };
-    }, [services]); // Re-run when services change
-
-    // Fallback: Auto-show cards after short delay if observer fails
-    useEffect(() => {
-        const fallbackTimer = setTimeout(() => {
-            // Check if cards are still not visible after 2 seconds
-            if (visibleProjects.size === 0 && projectCardsRef.current.length > 0) {
-                console.log('⚠️ Fallback: Auto-showing project cards');
-                setVisibleProjects(new Set([0, 1, 2, 3, 4, 5, 6, 7, 8]));
-            }
-            if (visibleServices.size === 0 && serviceCardsRef.current.length > 0) {
-                console.log('⚠️ Fallback: Auto-showing service cards');
-                setVisibleServices(new Set([0, 1, 2]));
-            }
-        }, 2000);
-
-        return () => clearTimeout(fallbackTimer);
-    }, [visibleProjects, visibleServices]);
-
-    // Debug logging (hapus setelah testing)
-    useEffect(() => {
-        console.log('🔍 Debug Info:');
-        console.log('- Project Cards Refs:', projectCardsRef.current.length);
-        console.log('- Visible Projects:', Array.from(visibleProjects));
-        console.log('- Service Cards Refs:', serviceCardsRef.current.length);
-        console.log('- Visible Services:', Array.from(visibleServices));
-    }, [visibleProjects, visibleServices]);
-    const handleSendMessage = async (e) => {
-        e.preventDefault();
-        setIsSending(true);
+    const handleSendMessage = async (event) => {
+        event.preventDefault();
         setSendSuccess(false);
-        setSendError(null);
+        setSendError('');
+
+        if (!contactName.trim()) {
+            setSendError('Nama wajib diisi.');
+            return;
+        }
+
+        if (!contactEmail.trim()) {
+            setSendError('Email wajib diisi.');
+            return;
+        }
+
+        if (!contactMessage.trim()) {
+            setSendError('Pesan wajib diisi.');
+            return;
+        }
 
         const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
         const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
         const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 
-        // Debug logging
-        console.log('=== EMAIL JS DEBUG ===');
-        console.log('Service ID:', serviceId ? '✓ Set' : '✗ Missing');
-        console.log('Template ID:', templateId ? '✓ Set' : '✗ Missing');
-        console.log('Public Key:', publicKey ? '✓ Set' : '✗ Missing');
-
-        // Build template params with multiple common keys so they match whatever
-        // variable names are used in the EmailJS template.
-        const templateParams = {
-            // name aliases
-            from_name: contactName || 'Website Visitor',
-            name: contactName || 'Website Visitor',
-            user_name: contactName || 'Website Visitor',
-
-            // email aliases
-            from_email: contactEmail || '',
-            user_email: contactEmail || '',
-            email: contactEmail || '',
-            reply_to: contactEmail || '',
-
-            // subject
-            subject: contactSubject || `Website Contact from ${contactName || contactEmail || 'Visitor'}`,
-
-            // message/body (plain and html variants)
-            message: contactMessage || '',
-            body: contactMessage || '',
-            text: contactMessage || '',
-            plain_message: contactMessage || '',
-            message_html: `<p>${(contactMessage || '').replace(/\n/g, '<br/>')}</p>`,
-
-            // convenience fields for templates that expect all-in-one
-            full_message: `From: ${contactName} <${contactEmail}>\nSubject: ${contactSubject}\n\n${contactMessage}`
-        };
-
-        console.log('Template Parameters:', templateParams);
-        console.log('=====================');
-
-        // Validasi input
-        if (!contactName.trim()) {
-            setSendError('Nama harus diisi');
-            setIsSending(false);
-            return;
-        }
-        if (!contactEmail.trim()) {
-            setSendError('Email harus diisi');
-            setIsSending(false);
-            return;
-        }
-        if (!contactMessage.trim()) {
-            setSendError('Pesan harus diisi');
-            setIsSending(false);
+        if (!serviceId || !templateId || !publicKey) {
+            setSendError('Konfigurasi email belum tersedia.');
             return;
         }
 
-        if (serviceId && templateId && publicKey) {
-            try {
-                console.log('Mengirim email dengan EmailJS...');
-                const response = await send(serviceId, templateId, templateParams, publicKey);
-                console.log('✓ Email berhasil dikirim!', response);
-                setSendSuccess(true);
-                setContactName('');
-                setContactEmail('');
-                setContactSubject('');
-                setContactMessage('');
+        setIsSending(true);
 
-                // Auto clear success message after 5 seconds
-                setTimeout(() => setSendSuccess(false), 5000);
-            } catch (err) {
-                console.error('✗ Error mengirim email:', err);
-                setSendError(`Gagal mengirim pesan: ${err.text || err.message}`);
-            } finally {
-                setIsSending(false);
-            }
-        } else {
-            console.error('EmailJS tidak dikonfigurasi dengan benar');
-            setSendError('Email service tidak dikonfigurasi. Silakan hubungi admin.');
+        try {
+            await send(
+                serviceId,
+                templateId,
+                {
+                    from_name: contactName,
+                    from_email: contactEmail,
+                    reply_to: contactEmail,
+                    subject: contactSubject || `Pesan portfolio dari ${contactName}`,
+                    message: contactMessage,
+                    full_message: `From: ${contactName} <${contactEmail}>\nSubject: ${contactSubject}\n\n${contactMessage}`,
+                },
+                publicKey
+            );
+
+            setSendSuccess(true);
+            setContactName('');
+            setContactEmail('');
+            setContactSubject('');
+            setContactMessage('');
+        } catch (error) {
+            setSendError(`Pesan gagal dikirim: ${error?.text || error?.message || 'unknown error'}`);
+        } finally {
             setIsSending(false);
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-white text-xl font-light">Loading Portfolio...</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
-        <div className={isDarkMode ? 'dark' : ''}>
-            <div className="min-h-screen bg-gray-50 dark:bg-portfolio-dark transition-colors duration-500">
+        <div className="portfolio-bg min-h-screen text-stone-900">
+            <div className="pointer-events-none fixed inset-0 overflow-hidden">
+                <div className="bg-orb bg-orb-one" />
+                <div className="bg-orb bg-orb-two" />
+                <div className="bg-orb bg-orb-three" />
+            </div>
 
-                {/* Navigation */}
-                <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border-b border-gray-200 dark:border-slate-700">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between items-center h-16">
-                            <div className="text-2xl font-bold bg-gradient-to-r from-portfolio-accent to-portfolio-accentDark bg-clip-text text-transparent">
-                                Portfolio
+            <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-4 sm:px-6 lg:px-8 lg:pt-8">
+                <header className="soft-panel sticky top-4 z-40 mb-6 rounded-[28px] px-5 py-4 sm:px-7">
+                    <div className="flex items-center justify-between gap-4">
+                        <button
+                            type="button"
+                            onClick={() => scrollToSection('home')}
+                            className="flex items-center gap-3 text-left"
+                        >
+                            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#d96f57] text-sm font-bold text-white">
+                                F
+                            </span>
+                            <div>
+                                <div className="text-sm font-semibold tracking-[0.18em] text-stone-500 uppercase">
+                                    Portfolio
+                                </div>
+                                <div className="text-base font-semibold text-stone-900">Fadhlul Wafi</div>
                             </div>
+                        </button>
 
-                            {/* Desktop Menu */}
-                            <div className="hidden md:flex space-x-8">
-                                {['Home', 'About', 'Projects', 'Services', 'Contact'].map((item) => (
-                                    <button
-                                        key={item}
-                                        onClick={() => scrollToSection(item.toLowerCase())}
-                                        className="text-gray-700 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400 transition-colors"
-                                    >
-                                        {item}
-                                    </button>
-                                ))}
+                        <nav className="hidden items-center gap-7 text-sm font-medium text-stone-600 lg:flex">
+                            {navItems.map((item) => (
                                 <button
-                                    onClick={() => setIsDarkMode(!isDarkMode)}
-                                    className="px-4 py-1 rounded-full bg-gradient-to-r from-portfolio-accent to-portfolio-accentDark text-gray-900 font-semibold text-sm hover:shadow-lg transition-all"
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => scrollToSection(item.id)}
+                                    className="transition hover:text-stone-950"
                                 >
-                                    {isDarkMode ? '☀️' : '🌙'}
+                                    {item.label}
                                 </button>
-                            </div>
+                            ))}
+                        </nav>
 
-                            {/* Mobile Menu Button */}
+                        <div className="hidden lg:block">
                             <button
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="md:hidden text-gray-700 dark:text-gray-300"
+                                type="button"
+                                onClick={() => scrollToSection('contact')}
+                                className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-700"
                             >
-                                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                                Hubungi Saya
                             </button>
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsMenuOpen((prev) => !prev)}
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 bg-white/80 text-stone-800 lg:hidden"
+                            aria-label="Toggle menu"
+                        >
+                            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                        </button>
                     </div>
 
-                    {/* Mobile Menu */}
                     {isMenuOpen && (
-                        <div className="md:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700">
-                            <div className="px-4 py-4 space-y-3">
-                                {['Home', 'About', 'Projects', 'Services', 'Contact'].map((item) => (
-                                    <button
-                                        key={item}
-                                        onClick={() => scrollToSection(item.toLowerCase())}
-                                        className="block w-full text-left text-gray-700 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400"
-                                    >
-                                        {item}
-                                    </button>
-                                ))}
-                            </div>
+                        <div className="mt-4 grid gap-2 rounded-[24px] border border-stone-200/80 bg-white/90 p-3 lg:hidden">
+                            {navItems.map((item) => (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => scrollToSection(item.id)}
+                                    className="rounded-2xl px-4 py-3 text-left text-sm font-medium text-stone-700 transition hover:bg-stone-100 hover:text-stone-950"
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
                         </div>
                     )}
-                </nav>
+                </header>
 
-                {/* Hero Section */}
-                <section id="home" className="min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8 pt-16 sm:pt-20">
-                    <div className="max-w-7xl mx-auto w-full text-center">
-                        <div className="mb-6 sm:mb-8 inline-block animate-fade-in">
-                            <div className="brush-frame animate-float">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/profile.jpg`}
-                                    alt="Fadhlul Wafi"
-                                    className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300"
-                                />
-
-                            </div>  
+                <main className="space-y-8">
+                    <section id="home" className="soft-panel relative overflow-hidden rounded-[36px] px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+                        <div className="absolute inset-0 opacity-80">
+                            <div className="hero-mesh h-full w-full" />
                         </div>
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 animate-slide-up leading-tight">
-                            Fadhlul Wafi
-                        </h1>
-                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 animate-slide-up">
-                            Software Engineer & UI/UX Designer
-                        </p>
-                        <p className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto animate-slide-up leading-relaxed px-2">
-                            Crafting beautiful digital experiences with code and design.
-                            Passionate about building products that make a difference.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-slide-up px-2 w-full">
-                            <a href="/The New CV of Fadhlul Wafi.pdf" download className="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center text-sm sm:text-base">
-                                <Download className="mr-2 w-4 sm:w-5 h-4 sm:h-5 group-hover:animate-bounce" />
-                                Download CV
-                            </a>
-                            <button
-                                onClick={() => scrollToSection('contact')}
-                                className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-purple-500 dark:border-purple-400 text-purple-500 dark:text-purple-400 rounded-full font-semibold hover:bg-purple-500 hover:text-white transition-all duration-300 flex items-center justify-center text-sm sm:text-base"
-                            >
-                                Contact Me
-                                <ChevronRight className="ml-2 w-4 sm:w-5 h-4 sm:h-5" />
-                            </button>
-                        </div>
+                        <div className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+                            <div className="max-w-2xl">
+                                <p className="section-kicker">Portofolio pribadi</p>
+                                <h1 className="mt-4 max-w-xl font-display text-4xl leading-[1.05] text-stone-950 sm:text-5xl lg:text-6xl">
+                                    Halo, saya Fadhlul Wafi.
+                                </h1>
+                                <p className="mt-5 max-w-xl text-base leading-8 text-stone-600 sm:text-lg">
+                                    Saya adalah seorang Software Developer yang berfokus pada pengembangan aplikasi dan tampilan digital yang modern, terstruktur, serta mudah digunakan. Saya memiliki minat dalam menggabungkan logika pemrograman dengan desain antarmuka yang intuitif untuk menciptakan pengalaman pengguna yang nyaman dan profesional. Dengan perhatian pada detail, performa, dan estetika, saya berusaha membangun solusi digital yang tidak hanya berfungsi dengan baik, tetapi juga memberikan kesan yang kuat dan meyakinkan.
 
-                        {/* Social Links */}
-                        <div className="flex justify-center gap-4 sm:gap-6 mt-8 sm:mt-12 animate-slide-up">
-                            <a href="https://github.com/wafi14-art" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400 transition-colors">
-                                <Github className="w-6 h-6" />
-                            </a>
-                            <a href="https://www.linkedin.com/in/fadhlul-wafi" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400 transition-colors">
-                                <Linkedin className="w-6 h-6" />
-                            </a>
-                            <a href="https://wa.me/62895412231715" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400 transition-colors">
-                                {/* WhatsApp SVG icon */}
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M21 12.1c0 5.4-4.4 9.8-9.8 9.8a9.7 9.7 0 0 1-5.2-1.5L3 21l1.6-3.9A9.8 9.8 0 0 1 2.8 12C2.8 6.6 7.2 2.2 12.6 2.2S22.4 6.6 22.4 12c0 .8-.1 1.6-.4 2.1z" />
-                                    <path d="M17.2 14.2c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.2-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.5 0-.6-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.5-.3.4-1 1-1 2.4s1 2.8 1.1 3c.1.2 1.8 3 4.4 4.2 3 .9 3.4.8 3.9.7.5-.1 1.6-.6 1.8-1.1.2-.5.2-1 .1-1.1-.1-.1-.4-.2-.7-.3z" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                {/* About Section */}
-                <section id="about" ref={aboutRef} className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-                    <div className={`max-w-7xl mx-auto scroll-fade-in ${aboutVisible ? 'visible' : ''}`}>
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 dark:text-white mb-8 sm:mb-12 md:mb-16">
-                            About Me
-                        </h2>
-
-                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-12 md:mb-16">
-                            <div className={`backdrop-blur-lg bg-white/10 dark:bg-white/5 p-6 sm:p-8 rounded-3xl border border-white/20 slide-in-left ${aboutVisible ? 'visible' : ''}`}>
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Who I Am</h3>
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-                                    Passionate Software Engineer graduate with strong expertise in developing
-                                    innovative technology solutions. Skilled in multiple programming languages
-                                    including JavaScript, Python, PHP, and Java, backed by solid foundations in
-                                    data structures and algorithms. Despite being at the start of my professional
-                                    journey, I have successfully delivered various personal and academic projects
-                                    showcasing strong problem-solving skills and rapid learning ability. Certified
-                                    in multiple IT domains, validating my technical proficiency. Enthusiastic about
-                                    contributing to dynamic development teams and enhancing my expertise through
-                                    challenging real-world projects.
                                 </p>
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                    When I'm not coding, you'll find me exploring new technologies, contributing to
-                                    open-source projects, or sharing knowledge with the developer community.
-                                </p>
+
+                                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                                    <a
+                                        href={cvFile}
+                                        download
+                                        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#d96f57] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#c25e47]"
+                                    >
+                                        <Download size={18} />
+                                        Download CV
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onClick={() => scrollToSection('projects')}
+                                        className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white/80 px-6 py-3.5 text-sm font-semibold text-stone-900 transition hover:border-stone-400 hover:bg-white"
+                                    >
+                                        Lihat Proyek
+                                        <ChevronRight size={18} />
+                                    </button>
+                                </div>
+
+                                <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                                    {stats.map((item) => (
+                                        <div key={item.label} className="rounded-[24px] border border-white/70 bg-white/70 px-5 py-4 shadow-[0_18px_35px_rgba(28,25,23,0.06)] backdrop-blur">
+                                            <div className="text-2xl font-semibold text-stone-950">{item.value}</div>
+                                            <div className="mt-1 text-sm text-stone-500">{item.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
+                            <div className="grid gap-4">
+                                <div className="photo-frame mx-auto w-full max-w-[430px] rounded-[34px] p-4">
+                                    <div className="flex min-h-[420px] items-end justify-center overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),rgba(239,230,222,0.78))] sm:min-h-[500px]">
+                                        <img
+                                            src={profileImage}
+                                            alt="Fadhlul Wafi"
+                                            className="h-[420px] w-auto max-w-[92%] object-contain object-bottom sm:h-[500px]"
+                                        />
+                                    </div>
+                                </div>
 
-                            <div className={`backdrop-blur-lg bg-white/10 dark:bg-white/5 p-6 sm:p-8 rounded-3xl border border-white/20 slide-in-right ${aboutVisible ? 'visible' : ''}`}>
-                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Skills & Expertise</h3>
-
-                                {/* Skills Categories */}
-                                {['Frontend', 'Backend', 'Mobile', 'Database'].map((category) => {
-                                    const categorySkills = skills.filter(skill => skill.category === category);
-                                    if (categorySkills.length === 0) return null;
-
-                                    return (
-                                        <div key={category} className="mb-6 sm:mb-8">
-                                            <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                                                <span className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-3"></span>
-                                                {category}
-                                            </h4>
-                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                                {categorySkills.map((skill, index) => {
-                                                    const skillId = `${category}-${skill.name}`;
-                                                    const isFlipped = flippedSkills.has(skillId);
-
-                                                    return (
-                                                        <div key={index} className="flex flex-col items-center space-y-2">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setFlippedSkills(prev => {
-                                                                        const newSet = new Set(prev);
-                                                                        if (newSet.has(skillId)) {
-                                                                            newSet.delete(skillId);
-                                                                        } else {
-                                                                            newSet.add(skillId);
-                                                                        }
-                                                                        return newSet;
-                                                                    });
-                                                                }}
-                                                                className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center transition-all duration-500 hover:scale-110 hover:shadow-lg hover:shadow-purple-500/30 ${isFlipped ? 'rotate-y-180' : ''}`}
-                                                                style={{
-                                                                    transformStyle: 'preserve-3d',
-                                                                    transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
-                                                                }}
-                                                            >
-                                                                <img
-                                                                    src={skill.icon}
-                                                                    alt={skill.name}
-                                                                    className="w-6 h-6 sm:w-8 sm:h-8 filter brightness-0 invert"
-                                                                    onError={(e) => {
-                                                                        console.error(`Failed to load: ${skill.icon}`);
-                                                                        e.target.style.display = 'none';
-                                                                    }}
-                                                                />
-                                                            </button>
-                                                            <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
-                                                                {skill.name}
-                                                            </span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
+                                <div className="mx-auto grid w-full max-w-[430px] gap-3 sm:grid-cols-2">
+                                    <div className="rounded-[24px] border border-white/80 bg-white/75 px-4 py-4 backdrop-blur">
+                                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+                                            Domisili
                                         </div>
-                                    );
-                                })}
-
-                                {/* Skill Level Legend */}
-                                <div className="mt-6 sm:mt-8 p-4 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10">
-                                    <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">Proficiency Levels</h5>
-                                    <div className="grid grid-cols-2 gap-3 text-xs">
-                                        <div className="flex items-center space-x-2">
-                                            <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full"></div>
-                                            <span className="text-gray-600 dark:text-gray-400">80-100%: Expert</span>
+                                        <div className="mt-2 flex items-center gap-2 text-sm font-medium text-stone-800">
+                                            <MapPin size={16} className="text-[#d96f57]" />
+                                            Bekasi, Indonesia
                                         </div>
-                                        <div className="flex items-center space-x-2">
-                                            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
-                                            <span className="text-gray-600 dark:text-gray-400">60-79%: Advanced</span>
+                                    </div>
+                                    <div className="rounded-[24px] border border-white/80 bg-white/75 px-4 py-4 backdrop-blur">
+                                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+                                            Ketersediaan
                                         </div>
-                                        <div className="flex items-center space-x-2">
-                                            <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
-                                            <span className="text-gray-600 dark:text-gray-400">40-59%: Intermediate</span>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <div className="w-3 h-3 bg-gradient-to-r from-red-400 to-red-600 rounded-full"></div>
-                                            <span className="text-gray-600 dark:text-gray-400">0-39%: Beginner</span>
+                                        <div className="mt-2 flex items-center gap-2 text-sm font-medium text-stone-800">
+                                            <Calendar size={16} className="text-[#d96f57]" />
+                                            Siap mulai Mei 2026 (freelance / part-time)
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </section>
 
-                        {/* Experience Timeline */}
-                        <div className={`backdrop-blur-lg bg-white/10 dark:bg-white/5 p-6 sm:p-8 rounded-3xl border border-white/20 scroll-fade-in ${aboutVisible ? 'visible' : ''}`}>
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8 flex items-center">
-                                <Briefcase className="mr-2 sm:mr-3 text-purple-500 flex-shrink-0" />
-                                Experience
-                            </h3>
-                            <div className="space-y-6">
-                                {experience.map((exp, index) => (
-                                    <div key={index} className="flex gap-4 group">
-                                        <div className="flex flex-col items-center">
-                                            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white flex-shrink-0">
-                                                <Calendar className="w-5 h-5" />
+                    <section id="about" className="soft-panel rounded-[36px] px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
+                        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-10">
+                            <div className="h-full rounded-[30px] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(247,241,234,0.92))] p-5 shadow-[0_20px_50px_rgba(28,25,23,0.08)]">
+                                <div className="flex min-h-[360px] items-end justify-center overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.96),rgba(238,226,216,0.8))]">
+                                    <img
+                                        src={profileImage}
+                                        alt="Profile of Fadhlul Wafi"
+                                        className="h-[360px] w-auto max-w-[88%] object-contain object-bottom"
+                                    />
+                                </div>
+                                <div className="mt-4 grid grid-cols-2 gap-3">
+                                    <a
+                                        href={cvFile}
+                                        download
+                                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 transition hover:text-stone-950"
+                                    >
+                                        <Download size={17} />
+                                        Download CV
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onClick={() => scrollToSection('contact')}
+                                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 transition hover:text-stone-950"
+                                    >
+                                        <Mail size={17} />
+                                        Hubungi Saya
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p className="section-kicker">Tentang saya</p>
+                                <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
+                                </h2>
+                                <p className="mt-5 text-base leading-8 text-stone-600">
+                                    Sebagai mahasiswa Informatika, saya banyak bekerja pada project akademik dan
+                                    pengembangan mandiri yang menuntut ketelitian antarmuka serta struktur fitur yang
+                                    mudah dipahami. Saya menikmati proses mengubah layout yang terasa ramai menjadi
+                                    pengalaman yang lebih bersih dan terarah.
+                                </p>
+                                <p className="mt-4 text-base leading-8 text-stone-600">
+                                    Pendekatan saya sederhana: visual harus nyaman dilihat, konten harus mudah
+                                    dipindai, dan setiap section harus punya ritme yang jelas. Karena itu halaman ini
+                                    saya susun ulang dengan card yang stabil, grid foto yang menyatu dengan layout,
+                                    dan komposisi yang lebih modern.
+                                </p>
+
+                                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                                    <div className="rounded-[24px] border border-stone-200/80 bg-white/75 p-5">
+                                        <div className="flex items-center gap-3 text-stone-900">
+                                            <Briefcase size={18} className="text-[#d96f57]" />
+                                            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-stone-400">
+                                                Fokus saat ini
+                                            </span>
+                                        </div>
+                                        <p className="mt-3 text-sm leading-7 text-stone-600">
+                                            React interface, responsive layout, Android feature flow, dan presentasi
+                                            project yang lebih clean.
+                                        </p>
+                                    </div>
+                                    <div className="rounded-[24px] border border-stone-200/80 bg-white/75 p-5">
+                                        <div className="flex items-center gap-3 text-stone-900">
+                                            <Award size={18} className="text-[#d96f57]" />
+                                            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-stone-400">
+                                                Kekuatan utama
+                                            </span>
+                                        </div>
+                                        <p className="mt-3 text-sm leading-7 text-stone-600">
+                                            Cepat belajar, suka membereskan detail UI, dan nyaman bekerja dengan layout
+                                            yang terstruktur.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="process" className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
+                        <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
+                            <p className="section-kicker">Proses kerja</p>
+                            <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
+                                
+                            </h2>
+                            <p className="mt-5 text-base leading-8 text-stone-600">
+                            </p>
+
+                            <div className="mt-8 grid gap-4">
+                                {services.map((service) => {
+                                    const Icon = service.icon;
+
+                                    return (
+                                        <div key={service.title} className="h-full rounded-[24px] border border-stone-200/80 bg-white/70 p-5">
+                                            <div className="flex items-center gap-3">
+                                                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f7e7e2] text-[#d96f57]">
+                                                    <Icon size={20} />
+                                                </span>
+                                                <h3 className="text-lg font-semibold text-stone-900">{service.title}</h3>
                                             </div>
-                                            {index < experience.length - 1 && (
-                                                <div className="w-0.5 h-full bg-gradient-to-b from-purple-500 to-transparent mt-2"></div>
-                                            )}
+                                            <p className="mt-3 text-sm leading-7 text-stone-600">{service.description}</p>
                                         </div>
-                                        <div className="pb-8 flex-1">
-                                            <p className="text-purple-400 text-sm font-semibold mb-1">{exp.year}</p>
-                                            <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{exp.title}</h4>
-                                            <p className="text-gray-600 dark:text-gray-400 mb-2">{exp.company}</p>
-                                            <p className="text-gray-600 dark:text-gray-300">{exp.description}</p>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                {processSteps.map((item) => (
+                                    <div key={item.step} className="h-full rounded-[28px] border border-stone-200/80 bg-white/80 p-6">
+                                        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d96f57]">
+                                            {item.step}
                                         </div>
+                                        <h3 className="mt-4 text-xl font-semibold text-stone-900">{item.title}</h3>
+                                        <p className="mt-3 text-sm leading-7 text-stone-600">{item.description}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Projects Section */}
-                <section id="projects" ref={projectsRef} className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-gray-50/50 dark:bg-black/20">
-                    <div className="max-w-7xl mx-auto">
-                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8 scroll-fade-in ${projectsVisible ? 'visible' : ''}`}>
-                            Featured Projects
-                        </h2>
-                        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto px-2">
-                            A collection of my recent work showcasing various skills and technologies
-                        </p>
+                    <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+                        <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
+                            <p className="section-kicker">Keahlian</p>
+                            <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
 
-                        {/* Filter Buttons */}
-                        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-8 sm:mb-10 md:mb-12 px-2">
-                            {['All', 'Web Development', 'Mobile App', 'Design'].map((filter) => (
-                                <button
-                                    key={filter}
-                                    onClick={() => setActiveFilter(filter)}
-                                    className={`px-3 sm:px-6 py-1 sm:py-2 rounded-full font-semibold transition-all text-xs sm:text-sm ${activeFilter === filter
-                                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-100 sm:scale-105'
-                                        : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:shadow-md'
-                                        }`}
-                                >
-                                    {filter}
-                                </button>
-                            ))}
+                            </h2>
+                            <div className="mt-8 grid gap-4 grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
+                                {toolLogos.map((tool) => (
+                                    <div key={tool.name} className="rounded-[28px] border border-stone-200/80 bg-white/80 p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-[#d96f57]">
+                                        <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-[#f7e7e2] p-4">
+                                            <img src={tool.icon} alt={tool.name} className="h-12 w-auto" />
+                                        </div>
+                                        <div className="mt-4 text-sm font-semibold text-stone-900">{tool.name}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Projects Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                        <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
+                            <p className="section-kicker">Pengalaman</p>
+                            <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
+                            </h2>
+                            <div className="mt-8 space-y-4">
+                                {experience.map((item) => (
+                                    <div key={item.title} className="rounded-[26px] border border-stone-200/80 bg-white/75 p-5">
+                                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d96f57]">
+                                            {item.period}
+                                        </div>
+                                        <h3 className="mt-3 text-xl font-semibold text-stone-900">{item.title}</h3>
+                                        <p className="mt-3 text-sm leading-7 text-stone-600">{item.detail}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="projects" className="soft-panel rounded-[36px] px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
+                        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                            <div className="max-w-2xl">
+                                <p className="section-kicker">Proyek pilihan</p>
+                                <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
+                                    
+                                </h2>
+                                <p className="mt-4 text-base leading-8 text-stone-600">
+                                </p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                                {projectFilters.map((filter) => (
+                                    <button
+                                        key={filter}
+                                        type="button"
+                                        onClick={() => setActiveFilter(filter)}
+                                        className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${
+                                            activeFilter === filter
+                                                ? 'bg-stone-900 text-white'
+                                                : 'border border-stone-200 bg-white/75 text-stone-600 hover:text-stone-900'
+                                        }`}
+                                    >
+                                        {filter}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="mt-8 grid items-stretch gap-5 lg:grid-cols-3">
                             {filteredProjects.map((project, index) => (
-                                <div
+                                <article
                                     key={project.id}
-                                    ref={el => projectCardsRef.current[index] = el}
-                                    className={`group backdrop-blur-lg bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer project-card-item ${visibleProjects.has(index) ? 'visible' : ''}`}
-                                    onClick={() => setSelectedProject(project)}
+                                    className={`rounded-[30px] border border-stone-200/80 bg-white/82 p-5 shadow-[0_22px_40px_rgba(28,25,23,0.06)] ${
+                                        index === 0 && filteredProjects.length > 1 ? 'lg:col-span-2 lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:gap-6' : 'flex h-full flex-col'
+                                    }`}
                                 >
-                                    <div className={`h-32 sm:h-40 md:h-48 flex items-center justify-center text-white text-4xl sm:text-6xl font-bold relative overflow-hidden ${project.imageType === 'custom' ? 'bg-white' : project.image}`}>
-                                        {project.imageType === 'custom' ? (
-                                            <div className="w-full h-full flex items-center justify-center p-4 sm:p-6">
-                                                <img
-                                                    src={project.image}
-                                                    alt={project.title}
-                                                    className="max-w-full max-h-full object-contain"
-                                                    onError={(e) => {
-                                                        console.error('Image failed to load:', project.image);
-                                                        e.target.style.display = 'none';
-                                                    }}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <span>{project.title[0]}</span>
-                                        )}
-                                        <div className="absolute inset-0 bg-transparent group-hover:bg-black/20 transition-all flex items-center justify-center">
-                                            <ExternalLink className="opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 sm:w-8 sm:h-8 text-purple-600" />
+                                    <div
+                                        className={`project-visual flex items-center justify-center rounded-[24px] p-6 sm:p-8 ${
+                                            index === 0 && filteredProjects.length > 1 ? 'min-h-[280px] lg:min-h-[360px]' : 'min-h-[250px]'
+                                        }`}
+                                    >
+                                        <div className={`project-logo-frame ${project.frameClass || ''}`}>
+                                            <img
+                                                src={project.image}
+                                                alt={project.title}
+                                                className={`project-logo-image ${project.imageClass || ''}`}
+                                            />
                                         </div>
                                     </div>
-                                    <div className="p-4 sm:p-6">
-                                        <div className="text-xs sm:text-sm text-purple-500 mb-1 sm:mb-2">{project.category}</div>
-                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">{project.title}</h3>
-                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 sm:mb-4">{project.description}</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {project.tech.map((tech, i) => (
+
+                                    <div className={index === 0 && filteredProjects.length > 1 ? 'mt-5 lg:mt-0 lg:flex lg:flex-col lg:justify-center' : 'mt-5'}>
+                                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d96f57]">
+                                            {project.category}
+                                        </div>
+                                        <h3 className="mt-3 text-2xl font-semibold text-stone-950">{project.title}</h3>
+                                        <p className="mt-3 text-sm leading-7 text-stone-600">{project.description}</p>
+                                        <p className="mt-3 text-sm leading-7 text-stone-500">{project.longDescription}</p>
+
+                                        <div className="mt-5 flex flex-wrap gap-2">
+                                            {project.tech.map((tech) => (
                                                 <span
-                                                    key={i}
-                                                    className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-xs font-medium"
+                                                    key={tech}
+                                                    className="rounded-full border border-stone-200 bg-stone-50 px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-stone-500"
                                                 >
                                                     {tech}
                                                 </span>
                                             ))}
                                         </div>
+
+                                        <div className="mt-6 flex flex-wrap gap-3">
+                                            {project.liveUrl ? (
+                                                <a
+                                                    href={project.liveUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="inline-flex items-center gap-2 rounded-full bg-[#d96f57] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#c25e47]"
+                                                >
+                                                    Kunjungi proyek
+                                                    <ExternalLink size={16} />
+                                                </a>
+                                            ) : (
+                                                <span className="inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-5 py-3 text-sm font-medium text-stone-500">
+                                                    Proyek privat / konsep
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
+                                </article>
                             ))}
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Project Modal */}
-                {selectedProject && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setSelectedProject(null)}>
-                        <div className="bg-white dark:bg-slate-800 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                            <div className={`h-64 sm:h-80 flex items-center justify-center text-white text-8xl font-bold ${selectedProject.imageType === 'custom' ? 'bg-white' : selectedProject.image}`}>
-                                {selectedProject.imageType === 'custom' ? (
-                                    <div className="w-full h-full flex items-center justify-center p-8 sm:p-16">
-                                        <img
-                                            src={selectedProject.image}
-                                            alt={selectedProject.title}
-                                            className="max-w-full max-h-full object-contain"
-                                            onError={(e) => {
-                                                console.error('Modal image failed to load:', selectedProject.image);
-                                                e.target.style.display = 'none';
-                                            }}
-                                        />
-                                    </div>
-                                ) : (
-                                    <span>{selectedProject.title[0]}</span>
-                                )}
-                            </div>
-                            <div className="p-8">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div>
-                                        <div className="text-sm text-purple-500 mb-2">{selectedProject.category}</div>
-                                        <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{selectedProject.title}</h3>
-                                    </div>
-                                    <button
-                                        onClick={() => setSelectedProject(null)}
-                                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                                    >
-                                        <X size={24} />
-                                    </button>
-                                </div>
-                                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                                    {selectedProject.longDescription}
-                                </p>
-                                <div className="mb-6">
-                                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Technologies Used:</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {selectedProject.tech.map((tech, i) => (
-                                            <span
-                                                key={i}
-                                                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-sm font-medium"
-                                            >
-                                                {tech}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <button className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-lg transition-all">
-                                    View Live Project
-                                </button>
-                            </div>
+                    <section className="soft-panel rounded-[36px] px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
+                        <div className="max-w-2xl">
+                            <p className="section-kicker">Sertifikat</p>
+                            <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
+                            </h2>
                         </div>
-                    </div>
-                )}
 
-                {/* Services Section */}
-                <section id="services" ref={servicesRef} className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-                    <div className="max-w-7xl mx-auto">
-                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8 scroll-fade-in ${servicesVisible ? 'visible' : ''}`}>
-                            Services
-                        </h2>
-                        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto px-2">
-                            Comprehensive digital solutions tailored to your needs
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                            {services.map((service, index) => (
-                                <div
-                                    key={index}
-                                    ref={el => serviceCardsRef.current[index] = el}
-                                    className={`service-card bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group project-card-item ${visibleServices.has(index) ? 'visible' : ''}`}
-                                >
-                                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-portfolio-accent to-portfolio-accentDark rounded-2xl flex items-center justify-center text-white mb-4 sm:mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                                        {React.cloneElement(service.icon, { className: 'w-8 sm:w-10 h-8 sm:h-10' })}
-                                    </div>
-                                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
-                                        {service.title}
-                                    </h3>
-                                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                                        {service.description}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Certificates Section */}
-                <section id="certificates" ref={certificatesRef} className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-gray-50/50 dark:bg-black/20">
-                    <div className="max-w-7xl mx-auto">
-                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8 scroll-fade-in ${certificatesVisible ? 'visible' : ''}`}>
-                            Certificates
-                        </h2>
-                        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto px-2">
-                            Professional certifications and achievements in IT domains
-                        </p>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                            {certificates.map((cert, index) => (
+                        <div className="mt-8 grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                            {certificates.map((certificate) => (
                                 <button
-                                    key={cert.id}
-                                    onClick={() => { setSelectedCertificate(cert); setIsZoomed(false); }}
-                                    className={`group bg-white/5 dark:bg-white/5 p-2 sm:p-4 rounded-2xl border border-white/10 hover:scale-105 transition-all flex flex-col items-center project-card-item ${certificatesVisible ? 'visible' : ''}`}
+                                    key={certificate.id}
+                                    type="button"
+                                    onClick={() => setSelectedCertificate(certificate)}
+                                    className="h-full text-left transition hover:-translate-y-1"
                                 >
-                                    <div className="w-full h-20 sm:h-24 md:h-36 bg-white/10 rounded overflow-hidden flex items-center justify-center">
-                                        <img
-                                            src={cert.image}
-                                            alt={cert.title}
-                                            className="object-cover w-full h-full"
-                                            onError={(e) => {
-                                                console.error(`Failed to load certificate: ${cert.image}`);
-                                                e.target.style.display = 'none';
-                                                e.target.parentElement.innerHTML = `<div class="flex items-center justify-center w-full h-full bg-gray-700 text-white text-xs p-2 text-center">${cert.title}</div>`;
-                                            }}
-                                        />
+                                    <div className="flex h-full flex-col overflow-hidden rounded-[26px] border border-stone-200/80 bg-white/80 p-3 shadow-[0_16px_35px_rgba(28,25,23,0.05)]">
+                                        <div className="overflow-hidden rounded-[20px] bg-stone-100">
+                                            <img
+                                                src={certificate.image}
+                                                alt={certificate.title}
+                                                className="h-44 w-full object-cover object-top"
+                                            />
+                                        </div>
+                                        <div className="flex-1 px-1 pb-1 pt-4">
+                                            <div className="text-sm font-semibold text-stone-900">{certificate.title}</div>
+                                        </div>
                                     </div>
-                                    <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-100 text-center line-clamp-2">{cert.title}</div>
                                 </button>
                             ))}
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Certificate Modal */}
-                {selectedCertificate && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => { setSelectedCertificate(null); setIsZoomed(false); }}>
-                        <div className="bg-white dark:bg-slate-800 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-auto p-6" onClick={(e) => e.stopPropagation()}>
-                            <div className="flex justify-between items-start">
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{selectedCertificate.title}</h3>
-                                <div className="flex gap-2">
-                                    <button onClick={() => setIsZoomed((z) => !z)} className="px-3 py-1 bg-purple-500 text-white rounded">{isZoomed ? 'Unzoom' : 'Zoom'}</button>
-                                    <button onClick={() => { setSelectedCertificate(null); setIsZoomed(false); }} className="px-3 py-1 bg-gray-200 dark:bg-slate-700 rounded">Close</button>
-                                </div>
-                            </div>
-                            <div className="mt-6 flex justify-center">
-                                <img src={selectedCertificate.image} alt={selectedCertificate.title} className={`max-w-full max-h-[70vh] transition-transform ${isZoomed ? 'scale-125' : 'scale-100'}`} />
+                    <section id="contact" className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
+                        <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
+                            <p className="section-kicker">Kontak</p>
+                            <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
+                            </h2>
+                            <p className="mt-5 text-base leading-8 text-stone-600">
+                                Pilih salah satu aplikasi di bawah untuk terhubung langsung.
+                            </p>
+
+                            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                {contactLinks.map((contact) => {
+                                    const Icon = contact.icon;
+
+                                    return (
+                                        <a
+                                            key={contact.label}
+                                            href={contact.href}
+                                            onClick={(event) => {
+                                                if (contact.label === 'Email') {
+                                                    event.preventDefault();
+                                                    const emailInput = document.getElementById('contact-email');
+                                                    emailInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                    emailInput?.focus();
+                                                }
+                                            }}
+                                            className="contact-link-badge group relative flex flex-col items-center justify-center gap-2 rounded-[24px] border border-stone-200/60 bg-white/70 p-4 text-center transition hover:-translate-y-1 hover:border-stone-300/80"
+                                        >
+                                            <div className={`${contact.bg} flex h-14 w-14 items-center justify-center rounded-2xl`}>
+                                                <Icon size={24} className={`${contact.textColor}`} />
+                                            </div>
+                                            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-600">
+                                                {contact.label}
+                                            </div>
+                                        </a>
+                                    );
+                                })}
                             </div>
                         </div>
-                    </div>
-                )}
 
-                {/* Contact Section */}
-                <section id="contact" ref={contactRef} className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
-                    <div className="max-w-4xl mx-auto">
-                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8 scroll-fade-in ${contactVisible ? 'visible' : ''}`}>Contact</h2>
-                        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 sm:mb-10 md:mb-12 px-2">Interested in working together? Send me a message.</p>
-                        <form onSubmit={handleSendMessage} className={`bg-white dark:bg-white/5 p-6 sm:p-8 rounded-3xl border border-gray-200 dark:border-white/10 scroll-fade-in ${contactVisible ? 'visible' : ''}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
-                                <input
-                                    type="text"
-                                    placeholder="Your Name"
-                                    value={contactName}
-                                    onChange={(e) => setContactName(e.target.value)}
-                                    className="p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-transparent text-sm sm:text-base focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
-                                />
-                                <input
-                                    type="email"
-                                    placeholder="Your Email"
-                                    value={contactEmail}
-                                    onChange={(e) => setContactEmail(e.target.value)}
-                                    className="p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-transparent text-sm sm:text-base focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
-                                />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Subject"
-                                value={contactSubject}
-                                onChange={(e) => setContactSubject(e.target.value)}
-                                className="w-full p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-transparent mb-3 sm:mb-4 text-sm sm:text-base focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
-                            />
-                            <textarea
-                                placeholder="Your Message"
-                                value={contactMessage}
-                                onChange={(e) => setContactMessage(e.target.value)}
-                                className="w-full p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-transparent mb-3 sm:mb-4 min-h-[100px] sm:min-h-[120px] text-sm sm:text-base focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
-                            ></textarea>
+                        <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
+                            <form onSubmit={handleSendMessage} className="grid h-full content-start gap-4">
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <label className="grid gap-2 text-sm font-medium text-stone-700">
+                                        Nama
+                                        <input
+                                            type="text"
+                                            value={contactName}
+                                            onChange={(event) => setContactName(event.target.value)}
+                                            className="rounded-2xl border border-stone-200 bg-white px-4 py-3.5 text-sm text-stone-900 outline-none transition focus:border-stone-400"
+                                            placeholder="Nama Anda"
+                                        />
+                                    </label>
+                                    <label className="grid gap-2 text-sm font-medium text-stone-700">
+                                        Email
+                                        <input
+                                            id="contact-email"
+                                            type="email"
+                                            value={contactEmail}
+                                            onChange={(event) => setContactEmail(event.target.value)}
+                                            className="rounded-2xl border border-stone-200 bg-white px-4 py-3.5 text-sm text-stone-900 outline-none transition focus:border-stone-400"
+                                            placeholder="name@email.com"
+                                        />
+                                    </label>
+                                </div>
 
-                            {isSending && <p className="text-gray-400 mb-4 text-sm">Sending…</p>}
-                            {sendSuccess && <p className="text-green-400 mb-4 text-sm">The email has been sent</p>}
-                            {sendError && <p className="text-red-400 mb-4 text-sm">{sendError}</p>}
+                                <label className="grid gap-2 text-sm font-medium text-stone-700">
+                                    Subjek
+                                    <input
+                                        type="text"
+                                        value={contactSubject}
+                                        onChange={(event) => setContactSubject(event.target.value)}
+                                        className="rounded-2xl border border-stone-200 bg-white px-4 py-3.5 text-sm text-stone-900 outline-none transition focus:border-stone-400"
+                                        placeholder="Diskusi project"
+                                    />
+                                </label>
 
-                            <div className="flex justify-center sm:justify-end">
-                                <button type="submit" disabled={isSending} className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold disabled:opacity-60 text-sm sm:text-base hover:shadow-lg transition-shadow">Send Message</button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
+                                <label className="grid gap-2 text-sm font-medium text-stone-700">
+                                    Pesan
+                                    <textarea
+                                        value={contactMessage}
+                                        onChange={(event) => setContactMessage(event.target.value)}
+                                        rows={6}
+                                        className="rounded-3xl border border-stone-200 bg-white px-4 py-3.5 text-sm text-stone-900 outline-none transition focus:border-stone-400"
+                                        placeholder="Ceritakan kebutuhan project atau bagian tampilan yang ingin dirapikan."
+                                    />
+                                </label>
 
-                {/* Footer */}
-                <footer className="py-6 sm:py-8 text-center px-4">
-                    <div className="max-w-4xl mx-auto text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        © {new Date().getFullYear()} Fadhlul Wafi
-                    </div>
+                                {sendError ? <p className="text-sm font-medium text-rose-600">{sendError}</p> : null}
+                                {sendSuccess ? <p className="text-sm font-medium text-emerald-600">Pesan berhasil dikirim.</p> : null}
+
+                                <button
+                                    type="submit"
+                                    disabled={isSending}
+                                    className="inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:bg-stone-400"
+                                >
+                                    {isSending ? 'Mengirim...' : 'Kirim Pesan'}
+                                    <ChevronRight size={18} />
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+
+                <footer className="px-2 pb-2 pt-8 text-center text-sm text-stone-500">
+                    Dirancang oleh Fadhlul Wafi.
                 </footer>
             </div>
+
+            {selectedCertificate && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(17,24,39,0.72)] p-4 backdrop-blur-sm"
+                    onClick={() => setSelectedCertificate(null)}
+                >
+                    <div
+                        className="max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-[32px] border border-white/20 bg-white p-4 shadow-2xl"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="mb-3 flex items-center justify-between gap-4 px-2 pt-1">
+                            <div>
+                                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">Sertifikat</div>
+                                <div className="mt-1 text-lg font-semibold text-stone-950">{selectedCertificate.title}</div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setSelectedCertificate(null)}
+                                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 text-stone-700 transition hover:bg-stone-100"
+                                aria-label="Tutup modal sertifikat"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <div className="overflow-hidden rounded-[24px] bg-stone-100">
+                            <img
+                                src={selectedCertificate.image}
+                                alt={selectedCertificate.title}
+                                className="max-h-[75vh] w-full object-contain"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
