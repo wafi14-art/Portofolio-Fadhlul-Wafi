@@ -150,9 +150,11 @@ const certificates = [
     { id: 6, title: 'Jaringan Komputer', image: `${process.env.PUBLIC_URL}/certificates/jaringan_komputer.png` },
     { id: 7, title: 'Exam Cisco Essentials', image: `${process.env.PUBLIC_URL}/certificates/cisco_essentials.png` },
     { id: 8, title: 'Analisa Numerik', image: `${process.env.PUBLIC_URL}/certificates/sertifikat_tambahan.png` },
+    { id: 9, title: 'Course AI', image: `${process.env.PUBLIC_URL}/certificates/Sertifikat Rework Course AI.png` },
 ];
 
 const profileImage = `${process.env.PUBLIC_URL}/foto-profile-baru-web.png`;
+const profilepicture = `${process.env.PUBLIC_URL}/Foto Profile (3).png`;
 const cvFile = `${process.env.PUBLIC_URL}/The New CV of Fadhlul Wafi.pdf`;
 const contactLinks = [
     {
@@ -356,7 +358,7 @@ const Portfolio = () => {
                                     Halo, saya Fadhlul Wafi.
                                 </h1>
                                 <p className="mt-5 max-w-xl text-base leading-8 text-stone-600 sm:text-lg">
-                                    Saya adalah seorang Software Developer yang berfokus pada pengembangan aplikasi dan tampilan digital yang modern, terstruktur, serta mudah digunakan. Saya memiliki minat dalam menggabungkan logika pemrograman dengan desain antarmuka yang intuitif untuk menciptakan pengalaman pengguna yang nyaman dan profesional. Dengan perhatian pada detail, performa, dan estetika, saya berusaha membangun solusi digital yang tidak hanya berfungsi dengan baik, tetapi juga memberikan kesan yang kuat dan meyakinkan.
+                                    Saya adalah Software Developer yang berfokus pada pengembangan aplikasi web modern, responsif, dan berorientasi pada pengalaman pengguna. Saya menikmati mengubah kebutuhan bisnis menjadi solusi digital yang efisien melalui kode yang bersih, arsitektur yang terstruktur, dan antarmuka yang intuitif. Dengan perhatian terhadap performa, skalabilitas, dan kualitas pengembangan, saya berkomitmen menciptakan aplikasi yang tidak hanya berfungsi dengan baik, tetapi juga memberikan nilai nyata bagi pengguna.
 
                                 </p>
 
@@ -391,54 +393,39 @@ const Portfolio = () => {
 
                             <div className="grid gap-4">
                                 <div className="photo-frame mx-auto w-full max-w-[430px] rounded-[34px] p-4">
-                                    <div className="flex min-h-[420px] items-end justify-center overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),rgba(239,230,222,0.78))] sm:min-h-[500px]">
-                                        <img
-                                            src={profileImage}
-                                            alt="Fadhlul Wafi"
-                                            className="h-[420px] w-auto max-w-[92%] object-contain object-bottom sm:h-[500px]"
-                                        />
+                                    <div className="mx-auto w-[236px] sm:w-full md:w-full [281px]">
+                                        <div className="aspect-[9/16] rounded-[28px]">
+                                            <img
+                                                src={profilepicture}
+                                                alt="Fadhlul Wafi"
+                                                className="h-full w-full object-contain object-bottom rounded-[28px]"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="mx-auto grid w-full max-w-[430px] gap-3 sm:grid-cols-2">
-                                    <div className="rounded-[24px] border border-white/80 bg-white/75 px-4 py-4 backdrop-blur">
-                                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-                                            Domisili
-                                        </div>
-                                        <div className="mt-2 flex items-center gap-2 text-sm font-medium text-stone-800">
-                                            <MapPin size={16} className="text-[#d96f57]" />
-                                            Bekasi, Indonesia
-                                        </div>
-                                    </div>
-                                    <div className="rounded-[24px] border border-white/80 bg-white/75 px-4 py-4 backdrop-blur">
-                                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-                                            Ketersediaan
-                                        </div>
-                                        <div className="mt-2 flex items-center gap-2 text-sm font-medium text-stone-800">
-                                            <Calendar size={16} className="text-[#d96f57]" />
-                                            Siap mulai Mei 2026 (freelance / part-time)
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </section>
 
                     <section id="about" className="soft-panel rounded-[36px] px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
                         <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-10">
-                            <div className="h-full rounded-[30px] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(247,241,234,0.92))] p-5 shadow-[0_20px_50px_rgba(28,25,23,0.08)]">
-                                <div className="flex min-h-[360px] items-end justify-center overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.96),rgba(238,226,216,0.8))]">
-                                    <img
-                                        src={profileImage}
-                                        alt="Profile of Fadhlul Wafi"
-                                        className="h-[360px] w-auto max-w-[88%] object-contain object-bottom"
-                                    />
+                            <div className="h-full rounded-[30px] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.95))] p-5 shadow-[0_20px_50px_rgba(28,25,23,0.08)]">
+                                <div className="mx-auto w-[236px] sm:w-[281px]">
+                                    <div className="aspect-[9/16] overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.96),rgba(255,255,255,0.95))]">
+                                        <img
+                                            src={profileImage}
+                                            alt="Profile of Fadhlul Wafi"
+                                            className="h-full w-full object-contain object-bottom"
+                                        />
+                                    </div>
                                 </div>
                                 <div className="mt-4 grid grid-cols-2 gap-3">
                                     <a
                                         href={cvFile}
                                         download
-                                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 transition hover:text-stone-950"
+                                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-200 bg-[#d96f57] px-4 py-3 text-sm font-medium text-white transition hover:text-stone-950"
                                     >
                                         <Download size={17} />
                                         Download CV
@@ -446,7 +433,7 @@ const Portfolio = () => {
                                     <button
                                         type="button"
                                         onClick={() => scrollToSection('contact')}
-                                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 transition hover:text-stone-950"
+                                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-200 bg-[#d96f57] px-4 py-3 text-sm font-medium text-white transition hover:text-stone-950"
                                     >
                                         <Mail size={17} />
                                         Hubungi Saya
@@ -471,32 +458,8 @@ const Portfolio = () => {
                                     dan komposisi yang lebih modern.
                                 </p>
 
-                                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                                    <div className="rounded-[24px] border border-stone-200/80 bg-white/75 p-5">
-                                        <div className="flex items-center gap-3 text-stone-900">
-                                            <Briefcase size={18} className="text-[#d96f57]" />
-                                            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-stone-400">
-                                                Fokus saat ini
-                                            </span>
-                                        </div>
-                                        <p className="mt-3 text-sm leading-7 text-stone-600">
-                                            React interface, responsive layout, Android feature flow, dan presentasi
-                                            project yang lebih clean.
-                                        </p>
-                                    </div>
-                                    <div className="rounded-[24px] border border-stone-200/80 bg-white/75 p-5">
-                                        <div className="flex items-center gap-3 text-stone-900">
-                                            <Award size={18} className="text-[#d96f57]" />
-                                            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-stone-400">
-                                                Kekuatan utama
-                                            </span>
-                                        </div>
-                                        <p className="mt-3 text-sm leading-7 text-stone-600">
-                                            Cepat belajar, suka membereskan detail UI, dan nyaman bekerja dengan layout
-                                            yang terstruktur.
-                                        </p>
-                                    </div>
-                                </div>
+
+
                             </div>
                         </div>
                     </section>
@@ -505,7 +468,7 @@ const Portfolio = () => {
                         <div className="soft-panel h-full rounded-[36px] px-6 py-8 sm:px-8 sm:py-10">
                             <p className="section-kicker">Proses kerja</p>
                             <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
-                                
+
                             </h2>
                             <p className="mt-5 text-base leading-8 text-stone-600">
                             </p>
@@ -585,7 +548,7 @@ const Portfolio = () => {
                             <div className="max-w-2xl">
                                 <p className="section-kicker">Proyek pilihan</p>
                                 <h2 className="mt-4 font-display text-3xl leading-tight text-stone-950 sm:text-4xl">
-                                    
+
                                 </h2>
                                 <p className="mt-4 text-base leading-8 text-stone-600">
                                 </p>
@@ -597,11 +560,10 @@ const Portfolio = () => {
                                         key={filter}
                                         type="button"
                                         onClick={() => setActiveFilter(filter)}
-                                        className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${
-                                            activeFilter === filter
-                                                ? 'bg-stone-900 text-white'
-                                                : 'border border-stone-200 bg-white/75 text-stone-600 hover:text-stone-900'
-                                        }`}
+                                        className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${activeFilter === filter
+                                            ? 'bg-stone-900 text-white'
+                                            : 'border border-stone-200 bg-white/75 text-stone-600 hover:text-stone-900'
+                                            }`}
                                     >
                                         {filter}
                                     </button>
@@ -613,14 +575,12 @@ const Portfolio = () => {
                             {filteredProjects.map((project, index) => (
                                 <article
                                     key={project.id}
-                                    className={`rounded-[30px] border border-stone-200/80 bg-white/82 p-5 shadow-[0_22px_40px_rgba(28,25,23,0.06)] ${
-                                        index === 0 && filteredProjects.length > 1 ? 'lg:col-span-2 lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:gap-6' : 'flex h-full flex-col'
-                                    }`}
+                                    className={`rounded-[30px] border border-stone-200/80 bg-white/82 p-5 shadow-[0_22px_40px_rgba(28,25,23,0.06)] ${index === 0 && filteredProjects.length > 1 ? 'lg:col-span-2 lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:gap-6' : 'flex h-full flex-col'
+                                        }`}
                                 >
                                     <div
-                                        className={`project-visual flex items-center justify-center rounded-[24px] p-6 sm:p-8 ${
-                                            index === 0 && filteredProjects.length > 1 ? 'min-h-[280px] lg:min-h-[360px]' : 'min-h-[250px]'
-                                        }`}
+                                        className={`project-visual flex items-center justify-center rounded-[24px] p-6 sm:p-8 ${index === 0 && filteredProjects.length > 1 ? 'min-h-[280px] lg:min-h-[360px]' : 'min-h-[250px]'
+                                            }`}
                                     >
                                         <div className={`project-logo-frame ${project.frameClass || ''}`}>
                                             <img
