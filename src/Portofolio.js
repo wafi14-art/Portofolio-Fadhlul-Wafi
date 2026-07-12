@@ -1,8 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import {
-    Award,
-    Briefcase,
-    Calendar,
     ChevronRight,
     Code,
     Download,
@@ -10,7 +7,6 @@ import {
     Github,
     Linkedin,
     Mail,
-    MapPin,
     Menu,
     MessageCircle,
     Palette,
@@ -457,9 +453,6 @@ const Portfolio = () => {
                                     saya susun ulang dengan card yang stabil, grid foto yang menyatu dengan layout,
                                     dan komposisi yang lebih modern.
                                 </p>
-
-
-
                             </div>
                         </div>
                     </section>
